@@ -9,6 +9,7 @@ model, then sum coherently to produce aggregate-level forecasts.
 
 from __future__ import annotations
 
+import warnings
 from collections.abc import Callable
 
 import numpy as np
@@ -126,7 +127,7 @@ def bottom_up_hierarchical(
     result: dict[str, pd.Series] = {}
     for g in df_bottom[group_col].unique():
         group_df = df_bottom[df_bottom[group_col] == g]
-        leaf_keys = group_df.reset_index()[leaf_cols].drop_duplicates()
+        leaf_keys = group_df[leaf_cols].drop_duplicates()
 
         fc_list: list[pd.Series] = []
         for _, key_row in leaf_keys.iterrows():
@@ -140,6 +141,8 @@ def bottom_up_hierarchical(
 
         if fc_list:
             result[str(g)] = pd.concat(fc_list, axis=1).sum(axis=1)
+        else:
+            warnings.warn(f"No forecastable leaves for group {g!r}; column omitted.", stacklevel=2)
 
     df_result = pd.DataFrame(result)
     df_result.index.name = "Quarter"

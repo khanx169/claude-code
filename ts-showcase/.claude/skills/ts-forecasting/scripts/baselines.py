@@ -33,6 +33,7 @@ def _fit_naive(series: pd.Series, horizon: int, period: int = 4) -> pd.Series:
     return pd.Series(
         np.full(horizon, series.iloc[-1]),
         index=_future_index(series, horizon),
+        name=series.name,
     )
 
 
@@ -43,7 +44,7 @@ def _fit_seasonal_naive(
         return _fit_naive(series, horizon)
     last_cycle = series.iloc[-period:].values
     values = np.tile(last_cycle, (horizon // period) + 1)[:horizon]
-    return pd.Series(values, index=_future_index(series, horizon))
+    return pd.Series(values, index=_future_index(series, horizon), name=series.name)
 
 
 def _fit_ets(series: pd.Series, horizon: int, period: int = 4) -> pd.Series:
@@ -54,7 +55,7 @@ def _fit_ets(series: pd.Series, horizon: int, period: int = 4) -> pd.Series:
     model = ExponentialSmoothing(
         series, trend="add", seasonal="add", seasonal_periods=period
     ).fit(optimized=True)
-    return model.forecast(horizon)
+    return model.forecast(horizon).rename(series.name)
 
 
 # ── Data loading ──────────────────────────────────────────────────────────────
