@@ -125,5 +125,37 @@ Also verify that ruff is installed in this project. If not, add it as a
 dev dependency (I'm using pip — check pyproject.toml).
 
 
+
+
+
+________________
+
+
+---
+name: ts-forecasting
+description: "Use whenever forecasting time series — fitting baselines (naive, seasonal-naive, drift), ETS / Holt-Winters, or simple hierarchical bottom-up reconciliation. Trigger on mentions of forecast, ARIMA, ETS, Holt-Winters, baselines, or hierarchical forecasting."
+---
+
+# Time-Series Forecasting
+
+## Quick reference
+
+| Task | Command |
+|------|---------|
+| Fit baselines | `python scripts/baselines.py <series.csv> --horizon 8` |
+| Fit ETS | `python scripts/baselines.py <series.csv> --model ets --horizon 8` |
+
+## When to use each baseline
+- **Naive**: flat forecast = last value. Use as a floor.
+- **Seasonal naive**: last observed value from the same season. Strong for seasonal data — use as the real baseline for the tourism data.
+- **ETS**: automatic error/trend/seasonal selection via statsmodels. Good default for univariate data.
+
+## Hierarchical bottom-up
+Forecast each bottom-level series independently, then sum up to get coherent forecasts at higher levels. Simplest reconciliation method — start here, compare against direct top-level forecasts.
+
+## Recommended evaluation
+Use MASE (Mean Absolute Scaled Error) — robust across series of different scales. Seasonal-naive is the scaling baseline.
+
+
 Show me the final settings.json and explain what each part does, so I
 can use this to teach others.
