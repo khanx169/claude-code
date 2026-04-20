@@ -1,0 +1,129 @@
+﻿________________
+
+
+
+
+I have initialized the repo. Now create a Python project ts-showcase using venv and pip with these deps: pandas, numpy, matplotlib, statsmodels, pytest, ruff, jupyter. The project will use Australian toruism data from tsibbledata that is public, and has ~500 quartery series, with State -> Region -> Purpose heirarchy. This data supports two things we will showcase: EDA and a simple heirarchical forecast. Scaffold the structure I'll paste. Write a 15-line CLAUDE.md covering: what the project is, coding standards (type hints, ruff-clean), where tests live. Outline your plan first, wait for me to approve.
+________________
+
+
+
+
+Here's the directory structure: ts-showcase/                                                  
+  ├── CLAUDE.md                          # ~15 lines                                                                                 
+  ├── README.md                                                                                                                      
+  ├── pyproject.toml                     # pip project                                                                                
+  ├── .claude/                                                                                                                       
+  │   ├── settings.json                                                                                                              
+  │   ├── commands/                                                                                                                  
+  │   │   └── forecast.md                # /forecast <region> — one custom command                                                   
+  │   ├── hooks/                                                                                                                     
+  │   │   └── post-edit-format.sh        # ruff format after edits                                                                   
+  │   └── skills/                                                                                                                    
+  │       └── ts-forecasting/                                                                                                        
+  │           ├── SKILL.md                                                                                                           
+  │           └── scripts/baselines.py   # naive, seasonal-naive, ETS                                                                
+  ├── src/tsshowcase/                                                                                                                
+  │   ├── data.py                        # download + load                                                                           
+  │   ├── eda.py                         # one decomposition function                                                                
+  │   ├── models.py                      # baseline + ETS + simple bottom-up hierarchy                                               
+  │   └── evaluate.py                    # MAE + MASE                                                                                
+  ├── notebooks/                                                                                                                     
+  │   └── demo.ipynb                     # the story you'll tell live                                                                
+  └── tests/                                                                                                                         
+      └── test_models.py    
+
+
+________________
+
+
+
+
+❯ Before proceeding with implementations, lets commit and push the progress so far.  
+
+
+________________
+
+
+
+
+Create Reviewer Sub-Agent
+
+
+  A reviewer for model correctness that rigorously checks model implementations                                                  
+  for any mathematical and logical errors, and checks the implentation against                                                   
+  authoritative and/or reliable sources (paper, textbook chapters, canonical                                                         
+  implementatioons, etc.) 
+
+
+________________
+
+
+Use the ts-forecasting skill to build notebooks/demo.ipynb with five cells:
+1. Load the tourism data, show head + shape
+2. Plot total trips over time, highlight COVID drop
+3. STL decomposition of national total
+4. Fit seasonal-naive + ETS for a single region, plot forecasts vs. holdout
+5. Bottom-up hierarchical forecast by State, compare coherence vs. direct top-level forecast
+Keep cells short. Captions between cells should explain what we're seeing in one sentence.
+________________
+
+
+
+
+ Now lets use the ts-forecasting skill to build the notebooks/demo.ipynb with at least the following five cells (ignore COVID drop  
+  request):                                                                                                                          
+                                                                                                                                     
+  Use the ts-forecasting skill to build notebooks/demo.ipynb with five cells:                                                        
+                                                                                                                                     
+  Load the tourism data, show head + shape                                                                                           
+  Plot total trips over time, highlight COVID drop                                                                                   
+  STL decomposition of national total                                                                                                
+  Fit seasonal-naive + ETS for a single region, plot forecasts vs. holdout                                                           
+  Bottom-up hierarchical forecast by State, compare coherence vs. direct top-level forecast                                          
+                                                                                                                                     
+  Keep cells short. Captions between cells should explain what we're seeing in one sentence.  
+
+
+________________
+
+
+
+
+Create .claude/commands/forecast.md — a /forecast <region> command that loads the region's series, fits seasonal-naive + ETS, and prints a forecast table for the next 8 quarters. Write a short README.md with the "Tour for trainees" section: one paragraph per Claude Code feature shown.
+
+
+________________
+
+
+
+
+❯ Okay lets now use the ts-forecasting skill to create a comprehensive notebook that reproduces all tourism related results from the 
+   chapter 11 of the following book (of course using our own data only): https://otexts.com/fpp3/hierarchical.html,                  
+  https://otexts.com/fpp3/hts.html, https://otexts.com/fpp3/single-level.html, https://otexts.com/fpp3/reconciliation.html,          
+  https://otexts.com/fpp3/tourism.html, https://otexts.com/fpp3/rec-prob.html, https://otexts.com/fpp3/hierarchical-reading.html  
+
+
+________________
+
+
+
+
+Add a PostToolUse hook to .claude/settings.json that runs `ruff format`
+and `ruff check --fix` on any Python file after you edit or write it.
+
+
+Specifically:
+- Match the Write, Edit, and MultiEdit tools
+- Extract the edited file path from the hook's JSON stdin input using jq
+- Only run ruff if the file ends in .py (skip .md, .json, etc.)
+- Run `ruff format <file>` first, then `ruff check --fix <file>`
+- Keep both commands silent on success so the hook doesn't spam the session
+
+
+Also verify that ruff is installed in this project. If not, add it as a
+dev dependency (I'm using pip — check pyproject.toml).
+
+
+Show me the final settings.json and explain what each part does, so I
+can use this to teach others.
