@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(python3 -c \"\nimport sys, json\nd = json.load(sys.stdin)\nprint(d.get('tool_input',{}).get('file_path') or d.get('tool_response',{}).get('filePath',''))\n\"); [[ \"$f\" == *.py ]] || exit 0; .venv/bin/ruff format \"$f\" --quiet 2>/dev/null; .venv/bin/ruff check --fix \"$f\" --quiet 2>/dev/null"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -37,9 +37,7 @@ def fit_naive(series: pd.Series, horizon: int, period: int = 4) -> pd.Series:
     )
 
 
-def fit_seasonal_naive(
-    series: pd.Series, horizon: int, period: int = 4
-) -> pd.Series:
+def fit_seasonal_naive(series: pd.Series, horizon: int, period: int = 4) -> pd.Series:
     """Forecast by repeating the last complete seasonal cycle.
 
     Falls back to *fit_naive* when ``len(series) < period``.
@@ -142,7 +140,9 @@ def bottom_up_hierarchical(
         if fc_list:
             result[str(g)] = pd.concat(fc_list, axis=1).sum(axis=1)
         else:
-            warnings.warn(f"No forecastable leaves for group {g!r}; column omitted.", stacklevel=2)
+            warnings.warn(
+                f"No forecastable leaves for group {g!r}; column omitted.", stacklevel=2
+            )
 
     df_result = pd.DataFrame(result)
     df_result.index.name = "Quarter"
