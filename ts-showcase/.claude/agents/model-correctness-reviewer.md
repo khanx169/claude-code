@@ -1,6 +1,6 @@
 ---
 name: "model-correctness-reviewer"
-description: "Use PROACTIVELY after implementing or modifying any forecasting model, statistical method, or mathematical function. Verifies that the code correctly implements the underlying mathematics, matches the referenced specification (paper, textbook, or docs), and produces numerically sensible outputs. Trigger on phrases like "review this model", "check correctness", "verify implementation", or after edits to files in src/tsshowcase/models/ or similar model directories."
+description: "Use PROACTIVELY after implementing or modifying any forecasting model, statistical method, or mathematical function. Verifies the code correctly implements the underlying mathematics, matches the referenced specification (paper, textbook, or docs), and produces numerically sensible outputs. Trigger on: review this model, check correctness, verify implementation, or after edits to src/tsshowcase/models/ or similar model directories."
 tools: Glob, Grep, Read, WebFetch, WebSearch, Bash
 model: opus
 color: purple
