@@ -47,13 +47,21 @@ def _fit_seasonal_naive(
     return pd.Series(values, index=_future_index(series, horizon), name=series.name)
 
 
-def _fit_ets(series: pd.Series, horizon: int, period: int = 4) -> pd.Series:
+def _fit_ets(
+    series: pd.Series,
+    horizon: int,
+    period: int = 4,
+    trend: str | None = "add",
+    seasonal: str | None = "add",
+    robust: bool = False,
+) -> pd.Series:
+    _ = robust  # documented no-op — statsmodels ETS has no equivalent
     if len(series) < 2 * period:
         return _fit_seasonal_naive(series, horizon, period=period)
     from statsmodels.tsa.holtwinters import ExponentialSmoothing
 
     model = ExponentialSmoothing(
-        series, trend="add", seasonal="add", seasonal_periods=period
+        series, trend=trend, seasonal=seasonal, seasonal_periods=period
     ).fit(optimized=True)
     return model.forecast(horizon).rename(series.name)
 
