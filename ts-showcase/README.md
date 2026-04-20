@@ -23,6 +23,18 @@ jupyter notebook notebooks/demo.ipynb
 /forecast "Sydney"
 ```
 
+## Tour for trainees
+
+**CLAUDE.md** is the project's persistent context file — Claude Code reads it automatically at the start of every session. It records what the project does, coding standards (type annotations, ruff), and where things live, so Claude never needs to re-discover conventions from scratch.
+
+**Custom slash commands** (`.claude/commands/`) let you package a repeatable workflow as a single prompt template. `/forecast <region>` is defined in `forecast.md`: when you type it inside Claude Code, Claude looks up the region's state and purposes, runs `baselines.py` for each series, and prints a forecast table — no manual copy-pasting required.
+
+**Custom subagents** (`.claude/agents/`) are specialised Claude instances with their own system prompt, tool restrictions, and persistent memory. This project ships two: `code-quality-reviewer` runs ruff, checks annotations, and scores test quality; `model-correctness-reviewer` audits forecasting implementations against FPP3. Invoke them with `subagent_type: "code-quality-reviewer"` inside the Agent tool.
+
+**Skills** (`.claude/skills/`) are reference documents that Claude loads when working in a domain. The `ts-forecasting` skill (`SKILL.md`) documents the public API, key gotchas (ETS short-series guard, PeriodIndex handling), and the CLI interface of the standalone `baselines.py` diagnostic script — so Claude applies the right patterns without re-reading the source every time.
+
+**Agent memory** (`.claude/agent-memory/`) gives each subagent a file-based long-term memory. The `code-quality-reviewer` writes what it learns about this codebase — recurring issues, tool invocations, project-specific standards — so each subsequent review starts with institutional knowledge already loaded.
+
 ## Data
 
 `tsibble::tourism` — 304 leaf series × 80 quarters (1998 Q1 – 2017 Q4).  
