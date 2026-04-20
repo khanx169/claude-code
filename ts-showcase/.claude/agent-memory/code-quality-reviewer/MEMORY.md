@@ -1,0 +1,1 @@
+- [ts-showcase project standards](project_standards.md) — coding standards, ruff config, architecture overview, linter invocation
